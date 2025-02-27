@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from src.logger import logging
 from src.exception import CustomException
-from data_ingestion import DataIngestion
+from src.pipeline.data_ingestion import DataIngestion
 from dataclasses import dataclass
 from src.utils import save_object
 
@@ -30,7 +30,8 @@ class DataTransformation:
             df = pd.read_csv(X_path)
             numerical_features = [col for col in df.columns if df[col].dtype != 'O']
             numerical_features.pop(0)
-            print(f"input:{numerical_features}")
+
+            
             categoricaL_features = [col for col in df.columns if df[col].dtype == 'O']
             
             num_pipeline = Pipeline(
@@ -76,9 +77,6 @@ class DataTransformation:
 
             input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
-
-            #test
-            print(f"Columns Value{input_feature_train_df.columns}")
 
             input_feature_test_df = test_df.drop(columns=[target_column_name], axis=1)
             target_feature_test_df = test_df[target_column_name]
