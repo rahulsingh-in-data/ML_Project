@@ -6,4 +6,6 @@ matplotlib
 dill
 catboost
 xgboost
+Flask
+requests
 -e .

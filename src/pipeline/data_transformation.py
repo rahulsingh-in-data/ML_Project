@@ -55,7 +55,6 @@ class DataTransformation:
                 ('num_pipeline', num_pipeline, numerical_features),
                 ('cat_pipeline', cat_pipeline, categoricaL_features)
             ])
-
             return preprocessor
             
         except Exception as e:
