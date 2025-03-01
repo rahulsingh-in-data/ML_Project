@@ -27,8 +27,9 @@ class ModelTrainerConfig:
     train_model_filepath = os.path.join('artifacts', 'model.pkl')
 
 class ModelTrainer:
-    global models 
-    models = {'CatBoostRegressor': CatBoostRegressor(),
+    def __init__(self):
+        self.model_trainer_config = ModelTrainerConfig()
+        self.models = {'CatBoostRegressor': CatBoostRegressor(),
                   'AdaBoostRegressor': AdaBoostRegressor(),
                   'GradientBoostingRegressor': GradientBoostingRegressor(), 
                   'RandomForestRegressor': RandomForestRegressor(),
@@ -37,29 +38,24 @@ class ModelTrainer:
                   'DecisionTreeRegressor': DecisionTreeRegressor(),
                   'XGBRegressor': XGBRegressor()
                   }
-    
-    def __init__(self):
-        self.model_trainer_config = ModelTrainerConfig()
 
     
     def initiate_model_trainer(self, train_array, test_array):
         try:
-            print(f"DEBUG: Inside initiate_model_trainer - self.models exists? {hasattr(self, 'models')}")
-            print(f"DEBUG: Value of self.models: {self.models if hasattr(self, 'models') else 'MISSING!'}")
             logging.info("Splitting Training & Test Data")
             X_train, y_train, X_test, y_test = (
                 train_array[:, :-1], train_array[:, -1],
                 test_array[:, :-1], test_array[:, -1]
             )
 
-            model_report: dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)
+            model_report: dict = evaluate_models(X_train, y_train, X_test, y_test, self.models)
 
             best_model_score = max(sorted(model_report.values()))
 
             best_model_name = list(model_report.keys())[
                 (list(model_report.values()).index(best_model_score))]
             
-            best_model = models[best_model_name]
+            best_model = self.models[best_model_name]
             
             if best_model_score < 0.6:
                 raise CustomException("No Best Model Found")
